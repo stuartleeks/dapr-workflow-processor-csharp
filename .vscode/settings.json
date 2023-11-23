@@ -1,0 +1,9 @@
+{
+	"[csharp]": {
+		"editor.formatOnSave": true,
+	},
+	"github.copilot.enable": {
+		"*": true,
+		"csharp": false,
+	}
+}

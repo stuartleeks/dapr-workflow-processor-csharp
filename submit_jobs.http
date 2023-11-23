@@ -1,0 +1,70 @@
+# Start a simple job
+# @name startSimpleWorkflow
+POST http://localhost:8100/workflows
+Content-Type: application/json
+
+{
+	"steps": [
+		{
+			"name": "simple_test",
+			"actions" : [
+				{
+					"action": "processor1",
+					"content" : "Hello World"
+				}
+			]
+		}
+	]
+}
+
+###
+
+# Get the status of the job started above
+GET http://localhost:8100/workflows/{{startSimpleWorkflow.response.body.instanceId}}
+
+
+###
+# Start a job with multiple steps
+
+# @name startMultiStepWorkflow
+POST http://localhost:8100/workflows
+Content-Type: application/json
+
+{
+	"steps": [
+		{
+			"name": "parallel_step",
+			"actions" : [
+				{
+					"action": "processor1",
+					"content" : "Hello World"
+				},
+				{
+					"action": "processor1",
+					"content" : "Do stuff"
+				},
+				{
+					"action": "processor1",
+					"content" : "Do more stuff"
+				}
+			]
+		},
+			{
+			"name": "final_step",
+			"actions" : [
+				{
+					"action": "processor1",
+					"content" : "Finale"
+				}
+			]
+		}
+	]
+}
+
+###
+
+# Get the status of the job started above
+
+GET http://localhost:8100/workflows/{{startMultiStepWorkflow.response.body.instanceId}}
+
+
