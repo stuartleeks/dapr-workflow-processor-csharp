@@ -4,8 +4,8 @@ using Dapr.Workflow;
 
 namespace Workflow1
 {
-	record class InvokeProcessorRequest(string correlationId, string content);
-	public record class InvokeProcessorResult(bool success, string result);
+	record class InvokeProcessorRequest(string CorrelationId, string Content);
+	public record class InvokeProcessorResult(bool Success, string Result);
 
 
 	public class InvokeProcessorActivity : WorkflowActivity<ProcessingAction, InvokeProcessorResult>
@@ -39,22 +39,22 @@ namespace Workflow1
 				{
 					HttpResponseMessage response = await httpClient.PostAsJsonAsync(
 						requestUri: $"http://localhost:{daprPort}/v1.0/invoke/{input.Action}/method/process",
-						value: new InvokeProcessorRequest(correlationId: context.InstanceId, content: input.Content));
+						value: new InvokeProcessorRequest(CorrelationId: context.InstanceId, Content: input.Content));
 
 					if (response.StatusCode == HttpStatusCode.TooManyRequests)
 					{
 						Console.WriteLine($"{context.InstanceId}: {context.Name}: ⏳ 429 response from processor");
-						return new InvokeProcessorResult(success: false, result: "429 response from processor");
+						return new InvokeProcessorResult(Success: false, Result: "429 response from processor");
 					}
 					var result = await response.Content.ReadFromJsonAsync<InvokeProcessorResult>();
 					if (result == null)
 					{
 						var body = await response.Content.ReadAsStringAsync();
-						return new InvokeProcessorResult(success: false, result: body ?? "no response");
+						return new InvokeProcessorResult(Success: false, Result: body ?? "no response");
 					}
-					var emoji = result.success ? "✅" : "❌";
+					var emoji = result.Success ? "✅" : "❌";
 					Console.WriteLine($"{context.InstanceId}: {context.Name}: {emoji} Result: {result}");
-					return new InvokeProcessorResult(success: result.success, result: result.result);
+					return new InvokeProcessorResult(Success: result.Success, Result: result.Result);
 				}
 			}
 			catch (Exception ex)

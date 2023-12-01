@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Dapr.Workflow;
 
-namespace Workflow1
+namespace Workflow2
 {
 
 	public class ProcessingWorkflow : Workflow<ProcessingPayload, ProcessResult>
@@ -30,11 +30,14 @@ namespace Workflow1
 							actions.Select(action => new ProcessActionResult(action.Action, action.Content, false, null, 0)).ToList()));
 						continue;
 					}
-					var actionTasks = step.Actions.Select(action =>
-						context.CallActivityAsync<InvokeProcessorResult>(nameof(InvokeProcessorActivity), action)
-					).ToList();
-
+					// Submit actions to pubsub and wait for response via external event
+					var actionTasks = step.Actions.Select(async action =>
+					{
+						await context.CallActivityAsync<bool>(nameof(InvokeProcessorActivity), action);
+						return await context.WaitForExternalEventAsync<InvokeProcessorResult>(action.Name);
+					}).ToList();
 					await Task.WhenAll(actionTasks);
+
 					stepResults.Add(
 							new ProcessStepResult(
 								step.Name,

@@ -7,7 +7,6 @@ default:
 run-workflow1-no-retries:
 	dapr run --run-file dapr-workflow1-no-retries.yaml
 
-	
 stop-workflow1-no-retries:
 	dapr stop --run-file dapr-workflow1-no-retries.yaml
 
@@ -16,6 +15,12 @@ run-workflow1-dapr-retries:
 	
 stop-workflow1-dapr-retries:
 	dapr stop --run-file dapr-workflow1-dapr-retries.yaml
+
+run-workflow2-no-retries:
+	dapr run --run-file dapr-workflow2-no-retries.yaml
+
+stop-workflow2-no-retries:
+	dapr stop --run-file dapr-workflow2-no-retries.yaml
 
 ############################################################################
 # recipes for submitting and watching jobs

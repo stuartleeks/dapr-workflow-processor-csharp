@@ -1,4 +1,4 @@
-namespace Workflow1
+namespace Workflow2
 {
 	public record class ProcessingAction(string Name, string Action, string Content);
 	public record class ProcessingStep(string Name, ProcessingAction[] Actions);

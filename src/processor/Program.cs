@@ -45,16 +45,16 @@ app.MapPost("/process", (ProcessRequest request) =>
 		if (chance <= failureChance)
 		{
 			Console.WriteLine("Failing request with chance " + chance);
-			return Results.Json(data: new { success = false, result = "Failed by random chance 😢" }, statusCode: 400);
+			return Results.Json(data: new { Success = false, Result = "Failed by random chance 😢" }, statusCode: 400);
 		}
 	}
 	Console.WriteLine("Shifting content by " + shiftAmount);
-	var shiftedContent = CaesarShift(request.content, shiftAmount);
-	return Results.Json(data: new { success = true, result = shiftedContent }, statusCode: 200);
+	var shiftedContent = CaesarShift(request.Content, shiftAmount);
+	return Results.Json(data: new { Success = true, Result = shiftedContent }, statusCode: 200);
 });
 
 app.MapGet("/", () => "Hello 👋");
 
 await app.RunAsync($"http://0.0.0.0:{port}");
 
-public record ProcessRequest(string correlationId, string content);
+public record ProcessRequest(string CorrelationId, string Content);

@@ -1,0 +1,50 @@
+# https://docs.dapr.io/developing-applications/local-development/multi-app-dapr-run/multi-app-template/
+version: 1
+common:
+  resourcesPath: ./components-pubsub-concurrency
+apps:
+  - appID: processor1
+    appDirPath: src/processor
+    appPort: 8001
+    command: ["dotnet", "run"]
+    configFilePath: ../../components-pubsub-concurrency/config-1rps.yaml
+    appLogDestination: console
+    enableApiLogging: true
+    env:
+      PORT: 8001
+      DELAY: 2
+      FAILURE_CHANCE: 30
+
+  # - appID: processor2
+  #   appDirPath: src/processor
+  #   appPort: 8002
+  #   command: ["dotnet", "run"]
+  #   # configFilePath: ../../components-pubsub-concurrency/config-1rps.yaml
+  #   appLogDestination: console
+  #   enableApiLogging: true
+  #   env:
+  #     PORT: 8002
+  #     DELAY: 2
+  #     FAILURE_CHANCE: 30
+  #     SHIFT_AMOUNT: 2
+
+  - appID: processing_consumer
+    appDirPath: src/processing_consumer
+    command: ["dotnet", "run"]
+    appProtocol: http
+    appPort: 41234
+    env:
+      PORT: 41234
+
+
+  - appID: workflow2
+    appDirPath: src/workflow2
+    appPort: 8100
+    appProtocol: http
+    command: ["dotnet", "run"]
+    appLogDestination: console
+    enableApiLogging: true
+    logLevel: debug
+    env:
+      PORT: 8100
+      USE_RETRIES: false
