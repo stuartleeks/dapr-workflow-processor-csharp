@@ -32,9 +32,10 @@ namespace Workflow1
 					}
 					var actionTasks = step.Actions.Select(action =>
 						context.CallActivityAsync<InvokeProcessorResult>(nameof(InvokeProcessorActivity), action)
-					).ToList();
+					).ToList(); // Store evaluated enumeration as we use it after the await
 
 					await Task.WhenAll(actionTasks);
+
 					stepResults.Add(
 							new ProcessStepResult(
 								step.Name,
